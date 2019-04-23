@@ -19,5 +19,5 @@ npm install nodemon -g
 ## Run
 
 - watching bash 1: tsc -w
-- watching bash 2: nodemon dist/main.js
 - watching bash 3 (mongo): ./mongod --dbpath=../../data/db/
+- watching bash 2: nodemon dist/main.js
