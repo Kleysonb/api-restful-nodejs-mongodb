@@ -1,6 +1,7 @@
 import { Router } from '../common/router';
 import * as restify from 'restify';
 import { User } from './users.model';
+import { NotFoundError } from 'restify-errors';
 
 class UsersRouter extends Router {
 
@@ -15,14 +16,14 @@ class UsersRouter extends Router {
     applyRoutes(application: restify.Server) {
 
         application.get('/users', (req, resp, next) =>
-            User.find().then(this.render(resp, next)));
+            User.find().then(this.render(resp, next)).catch(next));
 
         application.get('users/:id', (req, resp, next) =>
-            User.findById(req.params.id).then(this.render(resp, next)));
+            User.findById(req.params.id).then(this.render(resp, next)).catch(next));
 
         application.post('/users', (req, resp, next) => {
             let user = new User(req.body);
-            user.save().then(this.render(resp, next));
+            user.save().then(this.render(resp, next)).catch(next);
         });
 
         application.put('/users/:id', (req, resp, next) => {
@@ -30,9 +31,9 @@ class UsersRouter extends Router {
             User.update({ _id: req.params.id }, req.body, options)
                 .exec().then(result => { // executa uma query de consulta
                     if (result.n) { // Se a consulta foi bem sucedida
-                        return User.findById(req.params.id).then(this.render(resp, next)) // retorna o usuário atualizado
+                        return User.findById(req.params.id).then(this.render(resp, next)).catch(next) // retorna o usuário atualizado
                     } else {
-                        resp.send(404);
+                        throw new NotFoundError('Documento não encontrado')
                     }
                 });
         });
@@ -47,10 +48,10 @@ class UsersRouter extends Router {
                 if (cmdResult.result.n) {
                     resp.send(204);
                 } else {
-                    resp.send(404);
+                    throw new NotFoundError('Documento não encontrado')
                 }
                 return next();
-            });
+            }).catch(next);
         });
     }
 }
