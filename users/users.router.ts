@@ -27,7 +27,7 @@ class UsersRouter extends Router {
         });
 
         application.put('/users/:id', (req, resp, next) => {
-            const options = { overwrite: true }; // Atualização Total
+            const options = { runValidators: true, overwrite: true }; // Atualização Total
             User.update({ _id: req.params.id }, req.body, options)
                 .exec().then(result => { // executa uma query de consulta
                     if (result.n) { // Se a consulta foi bem sucedida
@@ -39,8 +39,8 @@ class UsersRouter extends Router {
         });
 
         application.patch('/users/:id', (req, resp, next) => {
-            const options = { new: true };
-            User.findByIdAndUpdate(req.params.id, req.body, options).then(this.render(resp, next));
+            const options = { runValidators: true, new: true };
+            User.findByIdAndUpdate(req.params.id, req.body, options).then(this.render(resp, next)).catch(next);
         });
 
         application.del('users/:id', (req, resp, next) => {
