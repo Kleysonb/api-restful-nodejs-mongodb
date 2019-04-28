@@ -1,7 +1,6 @@
 import { ModelRouter } from '../common/model-router';
 import { Review } from './reviews.model';
 import * as restify from 'restify';
-import { NotFoundError } from 'restify-errors';
 
 class ReviewsRouter extends ModelRouter<Review> {
 

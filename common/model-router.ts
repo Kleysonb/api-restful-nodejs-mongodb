@@ -1,15 +1,13 @@
 import { Router } from './router'
 import * as mongoose from 'mongoose'
-import { User } from '../users/users.model';
 import { NotFoundError } from 'restify-errors';
-import { Review } from '../reviews/reviews.model';
 
-export abstract class ModelRouter<D extends mongoose.document> extends Router {
-    constructor(protected model: mogoose.Model){
+export abstract class ModelRouter<D extends mongoose.Document> extends Router {
+    constructor(protected model: mongoose.Model<D>){
         super();
     }
 
-    protected prepareOne(query: mongoose.DocumentQuery<Review, Review>): mongoose.DocumentQuery<D, D>{
+    protected prepareOne(query: mongoose.DocumentQuery<D, D>): mongoose.DocumentQuery<D, D>{
         return query.populate('user', 'name').populate('restaurant', 'name');
     }
 
@@ -25,10 +23,11 @@ export abstract class ModelRouter<D extends mongoose.document> extends Router {
         this.model.find().then(this.renderAll(resp, next)).catch(next)
 
     findById = (req, resp, next) => {
-        this.prepareOne(this.model.findById(req.params.id).then(this.render(resp, next)).catch(next))
+        this.prepareOne(this.model.findById(req.params.id)).then(this.render(resp, next)).catch(next);
     }
 
     save = (req, resp, next) => {
+            console.log("Save: POST")
             let document = new this.model(req.body);
             document.save().then(this.render(resp, next)).catch(next);
     }
