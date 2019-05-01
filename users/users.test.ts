@@ -2,10 +2,12 @@ import 'jest'
 import * as request from 'supertest'
 
 let address: string = (<any>global).address;
+let auth: string = (<any>global).auth;
 
 test('get /users', () => {
     return request(address)
         .get('/users')
+        .set('Authorization', auth)
         .then(response => {
             expect(response.status).toBe(200)
             expect(response.body.items).toBeInstanceOf(Array)
@@ -15,6 +17,7 @@ test('get /users', () => {
 test('post /users', () => {
     return request(address)
         .post('/users')
+        .set('Authorization', auth)
         .send({
             name: 'usuario1',
             email: 'usuario1@gmail.com',
@@ -33,6 +36,7 @@ test('post /users', () => {
 test('get /users/aaaa', () => {
     return request(address)
         .get('/users/aaaa')
+        .set('Authorization', auth)
         .then(response => {
             expect(response.status).toBe(404)
         }).catch(fail)
@@ -41,6 +45,7 @@ test('get /users/aaaa', () => {
 test('patch /users/:id', () => {
     return request(address)
         .post('/users')
+        .set('Authorization', auth)
         .send({
             name: 'usuario2',
             email: 'usuario2@gmail.com',
@@ -49,6 +54,7 @@ test('patch /users/:id', () => {
         .then(response =>
             request(address)
                 .patch(`/users/${response.body._id}`)
+                .set('Authorization', auth)
                 .send({
                     name: 'usuario2 - patch'
                 }))

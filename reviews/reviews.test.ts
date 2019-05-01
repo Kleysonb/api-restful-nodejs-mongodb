@@ -2,6 +2,7 @@ import 'jest'
 import * as request from 'supertest'
 
 let address: string = (<any>global).address;
+let auth: string = (<any>global).auth;
 
 test('get /reviews', () => {
     return request(address)
@@ -31,11 +32,12 @@ test('get /reviews', () => {
 //         }).catch(fail)
 // });
 
-test('get /reviews/aaaa', () => {
+test('get /reviews/aaaaa - not found', () => {
     return request(address)
-        .get('/reviews/aaaa')
+        .get('/reviews/aaaaa')
         .then(response => {
             expect(response.status).toBe(404)
-        }).catch(fail)
-});
+        })
+        .catch(fail)
+})
 
