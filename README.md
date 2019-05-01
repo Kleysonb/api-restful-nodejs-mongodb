@@ -27,3 +27,9 @@ npm i jest@22.4.2 ts-jest@22.0.4 typescript@2.6.2 supertest@3.0.0 @types/jest@22
 - watching bash 1: tsc -w
 - watching bash 3 (mongo): ./mongod --dbpath=../../data/db/
 - watching bash 2: nodemon dist/main.js
+
+## Test
+
+    ```bash
+    npm test
+    ```
